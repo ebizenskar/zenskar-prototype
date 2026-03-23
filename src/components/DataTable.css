@@ -1,0 +1,165 @@
+.table-container {
+  width: 100%;
+  border: 1px solid var(--color-table-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--color-content-bg);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+thead th {
+  background-color: var(--color-table-header);
+  color: #6B7280;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 12px 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-table-border);
+  white-space: nowrap;
+}
+
+.sort-icon {
+  margin-left: 4px;
+  font-size: 10px;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-table-border);
+  font-size: 13px;
+  color: #111827;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background-color: #F9FAFB;
+}
+
+.th-checkbox, .td-checkbox {
+  width: 40px;
+  text-align: center;
+  padding-left: 20px;
+}
+
+.custom-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #D1D5DB;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.drag-icon {
+  margin-left: 8px;
+  color: #9CA3AF;
+  letter-spacing: -2px;
+}
+
+.td-name {
+  font-weight: 600;
+}
+
+.customer-link {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.customer-link:hover {
+  text-decoration: underline;
+}
+
+.period-container {
+  display: flex;
+  align-items: stretch;
+}
+
+.timeline-graphic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 8px;
+  margin-top: 4px;
+}
+
+.timeline-dot {
+  width: 6px;
+  height: 6px;
+  border: 1.5px solid #9CA3AF;
+  border-radius: 50%;
+  background: white;
+}
+
+.timeline-dot-bottom {
+  width: 4px;
+  height: 4px;
+  border: 1px solid #9CA3AF;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.timeline-line {
+  width: 1px;
+  height: 14px;
+  border-left: 1px dashed #9CA3AF;
+  margin: 2px 0;
+}
+
+.period-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #4B5563;
+  font-size: 12px;
+}
+
+.td-created {
+  color: #4B5563;
+}
+
+.text-right {
+  text-align: right;
+  padding-right: 32px;
+}
+
+.td-value {
+  font-weight: 500;
+  position: relative;
+}
+
+.asterisk-space {
+  display: inline-block;
+  width: 10px;
+  text-align: left;
+}
+
+.th-settings {
+  width: 48px;
+  text-align: right;
+  padding-right: 20px;
+  color: #9CA3AF;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.td-actions {
+  text-align: right;
+  padding-right: 20px;
+  color: #9CA3AF;
+  cursor: pointer;
+}
+
+.action-icon {
+  font-weight: bold;
+}

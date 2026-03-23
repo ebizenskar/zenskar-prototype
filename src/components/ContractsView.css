@@ -1,0 +1,129 @@
+.contracts-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.5px;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #F7F7F8;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 8px 12px;
+  width: 240px;
+}
+
+.search-icon {
+  font-size: 14px;
+  color: #9CA3AF;
+  margin-right: 8px;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: #111827;
+  width: 100%;
+}
+
+.search-bar input::placeholder {
+  color: #9CA3AF;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-family);
+  height: 36px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-outline {
+  background-color: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  color: #374151;
+}
+
+.btn-outline:hover {
+  background-color: #F3F4F6;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  border: none;
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background-color: #E66645;
+}
+
+.chevron-down {
+  display: inline-block;
+  margin-left: 8px;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.download-icon {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.filter-row {
+  margin-bottom: 16px;
+  display: flex;
+}
+
+.btn-filter {
+  background-color: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  color: #374151;
+  text-transform: none;
+  font-weight: 500;
+  padding: 6px 14px;
+  height: 32px;
+}
+
+.btn-filter:hover {
+  background-color: #F3F4F6;
+}
+
+.filter-icon {
+  margin-right: 8px;
+  font-size: 14px;
+}
