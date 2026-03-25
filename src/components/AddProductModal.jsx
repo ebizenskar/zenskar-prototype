@@ -25,6 +25,7 @@ export const PRODUCT_CATALOG = [
         billingType: 'Prepaid',
         billingFrequency: 'Annually',
         isMetered: false,
+        discount: 17,
         description: 'Annual billing with 2 months free',
       },
     ],
@@ -59,6 +60,7 @@ export const PRODUCT_CATALOG = [
         billingType: 'Prepaid',
         billingFrequency: 'Monthly',
         isMetered: false,
+        discount: 10,
       },
       {
         id: 'ps-p2',
@@ -159,6 +161,7 @@ export const PRODUCT_CATALOG = [
         billingType: 'Postpaid',
         billingFrequency: 'Monthly',
         isMetered: true,
+        discount: 12,
         description: 'Usage-based pricing with volume discounts',
         tiers: [
           { from: 0,    to: 1000, price: '$0.010' },
@@ -217,7 +220,7 @@ function tierPriceRange(tiers, unit) {
     if (n < 1)     return `$${n.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')}`;
     return `$${n.toFixed(2).replace(/\.?0+$/, '')}`;
   };
-  return `${fmt(minP)} – ${fmt(maxP)}${unit ? ' ' + unit : ''}`;
+  return `${tiers.length} tiers: ${fmt(minP)} → ${fmt(maxP)}${unit ? ' ' + unit : ''}`;
 }
 
 function priceSummary(price) {
@@ -273,10 +276,18 @@ function NeutralBadge({ children }) {
   );
 }
 
+function DiscountBadge({ pct }) {
+  return (
+    <span className="bg-[#f1f5f9] border border-[#e2e8f0] text-[#334155] text-[11px] font-['Figtree:Regular',sans-serif] font-normal px-[6px] h-[20px] inline-flex items-center rounded-[4px] whitespace-nowrap shrink-0">
+      Discount: {pct}%
+    </span>
+  );
+}
+
 // ─── Price card ───────────────────────────────────────────────────────────────
 
 function PriceCard({ price, checked, onCheck }) {
-  const hasBadges = price.model || price.isMetered;
+  const hasBadges = price.isMetered || price.discount;
 
   return (
     <div
@@ -316,8 +327,8 @@ function PriceCard({ price, checked, onCheck }) {
         {/* Right: badges — metered (conditional, left) + pricing model (always, right) */}
         {hasBadges && (
           <div className="flex items-center gap-[6px] shrink-0 flex-wrap justify-end">
+            {price.discount && <DiscountBadge pct={price.discount} />}
             {price.isMetered && <NeutralBadge>Metered</NeutralBadge>}
-            {price.model && <NeutralBadge>{price.model}</NeutralBadge>}
           </div>
         )}
       </div>
@@ -428,7 +439,7 @@ export default function AddProductModal({ isOpen, onClose, onAdd, onRemove, exis
       phases: [{
         status: 'ONGOING',
         range: 'Product Start →',
-        perUnitPrice: price.tiers ? `Volume (${price.tiers.length} tiers)` : price.amount,
+        perUnitPrice: price.tiers ? tierPriceRange(price.tiers, price.unit) : price.amount,
         quantityIncluded: '—',
         billingCadence: `${price.isMetered ? 'Metered - ' : ''}${cadenceText}`,
       }],
