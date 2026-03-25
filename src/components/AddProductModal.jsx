@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-const imgClose = "http://localhost:3845/assets/98e25a857aab2114e770322536f9cafb06034d96.svg";
-
 // ─── Product catalog ──────────────────────────────────────────────────────────
 
 export const PRODUCT_CATALOG = [
@@ -9,48 +7,159 @@ export const PRODUCT_CATALOG = [
     id: 'user-seats',
     name: 'User Seats',
     type: 'Period of time',
-    metric: 'Quantity',
     prices: [
-      { id: 'us-p1', model: 'Per Unit Price', amount: '$20.00',    unit: '/seat/month' },
-      { id: 'us-p2', model: 'Per Unit Price', amount: '$200.00',   unit: '/seat/year'  },
+      {
+        id: 'us-p1',
+        model: 'Per Unit Price',
+        amount: '$20.00',
+        unit: '/seat/month',
+        billingType: 'Prepaid',
+        billingFrequency: 'Monthly',
+        isMetered: false,
+      },
+      {
+        id: 'us-p2',
+        model: 'Per Unit Price',
+        amount: '$200.00',
+        unit: '/seat/year',
+        billingType: 'Prepaid',
+        billingFrequency: 'Annually',
+        isMetered: false,
+        description: 'Annual billing with 2 months free',
+      },
     ],
   },
   {
     id: 'storage',
     name: 'Storage',
     type: 'Period of time',
-    metric: 'Quantity',
     prices: [
-      { id: 'st-p1', model: 'Per Unit Price', amount: '$0.10', unit: '/GB/month' },
+      {
+        id: 'st-p1',
+        model: 'Per Unit Price',
+        amount: '$0.10',
+        unit: '/GB/month',
+        billingType: 'Postpaid',
+        billingFrequency: 'Monthly',
+        isMetered: true,
+        description: 'Metered storage usage billed monthly',
+      },
     ],
   },
   {
     id: 'premium-support',
     name: 'Premium Support',
     type: 'Period of time',
-    metric: 'Flat fee',
     prices: [
-      { id: 'ps-p1', model: 'Flat Fee', amount: '$500.00',   unit: '/month' },
-      { id: 'ps-p2', model: 'Flat Fee', amount: '$5,000.00', unit: '/year'  },
+      {
+        id: 'ps-p1',
+        model: 'Flat Fee',
+        amount: '$500.00',
+        unit: '/month',
+        billingType: 'Prepaid',
+        billingFrequency: 'Monthly',
+        isMetered: false,
+      },
+      {
+        id: 'ps-p2',
+        model: 'Flat Fee',
+        amount: '$5,000.00',
+        unit: '/year',
+        billingType: 'Prepaid',
+        billingFrequency: 'Annually',
+        isMetered: false,
+        description: 'Includes 24/7 phone support and dedicated account manager',
+      },
+    ],
+  },
+  {
+    id: 'white-labeling',
+    name: 'White-labeling',
+    type: 'Period of time',
+    prices: [
+      {
+        id: 'wl-p1',
+        model: 'Flat Fee',
+        amount: '$1,200.00',
+        unit: '/month',
+        billingType: 'Prepaid',
+        billingFrequency: 'Monthly',
+        isMetered: false,
+        description: 'Remove all platform branding',
+      },
+    ],
+  },
+  {
+    id: 'report-credits',
+    name: 'Report Generation Credits',
+    type: 'Point in time',
+    prices: [
+      {
+        id: 'rc-p1',
+        model: 'Per Unit Price',
+        amount: '$50.00',
+        unit: '/50 credits',
+        billingType: null,
+        billingFrequency: 'One-time',
+        isMetered: false,
+        description: 'Credits never expire',
+      },
+    ],
+  },
+  {
+    id: 'platform-credits',
+    name: 'Platform Credits',
+    type: 'Point in time',
+    prices: [
+      {
+        id: 'pc-p1',
+        model: 'Package Price',
+        amount: '$100.00',
+        unit: '/100 credits',
+        billingType: null,
+        billingFrequency: 'One-time',
+        isMetered: false,
+      },
     ],
   },
   {
     id: 'data-exports',
     name: 'Data Exports',
     type: 'Point in time',
-    metric: 'Quantity',
     prices: [
-      { id: 'de-p1', model: 'Per Unit Price', amount: '$0.05', unit: '/export' },
+      {
+        id: 'de-p1',
+        model: 'Package Price',
+        amount: '$0.05',
+        unit: '/export',
+        billingType: null,
+        billingFrequency: 'One-time',
+        isMetered: false,
+      },
     ],
   },
   {
     id: 'api-calls',
     name: 'API Calls',
     type: 'Point in time',
-    metric: 'Quantity',
     prices: [
-      { id: 'ac-p1', model: 'Per Unit Price', amount: '$1.00', unit: '/call' },
-      { id: 'ac-p2', model: 'Volume Price', unit: '/call',
+      {
+        id: 'ac-p1',
+        model: 'Per Unit Price',
+        amount: '$1.00',
+        unit: '/100 calls',
+        billingType: null,
+        billingFrequency: 'One-time',
+        isMetered: false,
+      },
+      {
+        id: 'ac-p2',
+        model: 'Volume Price',
+        unit: '/call',
+        billingType: 'Postpaid',
+        billingFrequency: 'Monthly',
+        isMetered: true,
+        description: 'Usage-based pricing with volume discounts',
         tiers: [
           { from: 0,    to: 1000, price: '$0.010' },
           { from: 1000, to: 5000, price: '$0.008' },
@@ -60,22 +169,26 @@ export const PRODUCT_CATALOG = [
     ],
   },
   {
-    id: 'hd-plan',
-    name: 'HD Plan',
-    type: 'Point in time',
-    metric: 'Quantity',
-    prices: [
-      { id: 'hd-p1', model: 'Per Unit Price', amount: '$1.00', unit: '/access' },
-    ],
-  },
-  {
     id: 'email-notifications',
     name: 'Email Notifications',
     type: 'Point in time',
-    metric: 'Quantity',
     prices: [
-      { id: 'en-p1', model: 'Per Unit Price', amount: '$0.002', unit: '/email' },
-      { id: 'en-p2', model: 'Volume Price', unit: '/email',
+      {
+        id: 'en-p1',
+        model: 'Per Unit Price',
+        amount: '$0.002',
+        unit: '/email',
+        billingType: null,
+        billingFrequency: 'One-time',
+        isMetered: false,
+      },
+      {
+        id: 'en-p2',
+        model: 'Volume Price',
+        unit: '/email',
+        billingType: 'Postpaid',
+        billingFrequency: 'Monthly',
+        isMetered: true,
         tiers: [
           { from: 0,     to: 10000, price: '$0.0020' },
           { from: 10000, to: 50000, price: '$0.0015' },
@@ -84,33 +197,38 @@ export const PRODUCT_CATALOG = [
       },
     ],
   },
-  {
-    id: 'feature-access',
-    name: 'Feature Access',
-    type: 'Period of time',
-    metric: 'Flat fee',
-    prices: [
-      { id: 'fa-p1', model: 'Flat Fee', amount: '$99.00',  unit: '/month' },
-      { id: 'fa-p2', model: 'Flat Fee', amount: '$299.00', unit: '/month' },
-    ],
-  },
 ];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function fmtNum(n) {
+  if (n == null) return '';
   if (n >= 1_000_000) return `${n / 1_000_000}M`;
   if (n >= 1_000)     return `${n / 1_000}K`;
   return String(n);
 }
 
-function tierLabel(tier, isLast) {
-  return isLast ? `${fmtNum(tier.from)}+` : `${fmtNum(tier.from)} – ${fmtNum(tier.to)}`;
+function tierPriceRange(tiers, unit) {
+  const vals = tiers.map(t => parseFloat(t.price.replace('$', '')));
+  const minP = Math.min(...vals);
+  const maxP = Math.max(...vals);
+  const fmt = n => {
+    if (n < 0.01)  return `$${n.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')}`;
+    if (n < 1)     return `$${n.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')}`;
+    return `$${n.toFixed(2).replace(/\.?0+$/, '')}`;
+  };
+  return `${fmt(minP)} – ${fmt(maxP)}${unit ? ' ' + unit : ''}`;
 }
 
 function priceSummary(price) {
-  if (price.tiers) return `${price.model} · ${price.tiers.length} tiers`;
+  if (price.tiers) return tierPriceRange(price.tiers, price.unit);
   return `${price.amount}${price.unit ? ' ' + price.unit : ''}`;
+}
+
+function cadenceLabel(price) {
+  if (price.billingFrequency === 'One-time' || !price.billingFrequency) return 'One-time';
+  if (price.billingType) return `${price.billingType} ${price.billingFrequency}`;
+  return price.billingFrequency;
 }
 
 // ─── Check circle ─────────────────────────────────────────────────────────────
@@ -139,221 +257,217 @@ function CheckCircle({ checked, onClick }) {
 function TypeTag({ type }) {
   const bg = type === 'Point in time' ? 'bg-[#d8edff]' : 'bg-[#eef]';
   return (
-    <span className={`${bg} text-[#64748b] text-[11px] font-['Figtree:Medium',sans-serif] font-medium px-[6px] py-[2px] rounded-[4px] whitespace-nowrap shrink-0`}>
+    <span className={`${bg} text-[#334155] text-[12px] font-['Figtree:Regular',sans-serif] font-normal px-[6px] h-[22px] inline-flex items-center rounded-[6px] whitespace-nowrap shrink-0`}>
       {type}
     </span>
   );
 }
 
-// ─── Price content (amount or tier chips) ────────────────────────────────────
+// ─── Neutral badge ────────────────────────────────────────────────────────────
 
-function PriceContent({ price }) {
-  if (price.tiers) {
-    return (
-      <div className="flex flex-col gap-[5px]">
-        <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#475569] text-[12px] leading-[14px]">
-          {price.model}
-        </span>
-        <div className="flex flex-wrap gap-[4px]">
-          {price.tiers.map((tier, i) => (
-            <span
-              key={i}
-              className="font-['Figtree:Medium',sans-serif] font-medium text-[#475569] text-[11px] bg-[#f1f5f9] px-[6px] py-[2px] rounded-[4px] whitespace-nowrap leading-[14px]"
-            >
-              {tierLabel(tier, i === price.tiers.length - 1)}
-              <span className="text-[#94a3b8] mx-[3px]">→</span>
-              {tier.price}
-              {price.unit && <span className="text-[#94a3b8] ml-[1px]">{price.unit}</span>}
-            </span>
-          ))}
-        </div>
-      </div>
-    );
-  }
+function NeutralBadge({ children }) {
+  return (
+    <span className="bg-[#f1f5f9] border border-[#e2e8f0] text-[#334155] text-[11px] font-['Figtree:Regular',sans-serif] font-normal px-[6px] h-[20px] inline-flex items-center rounded-[4px] whitespace-nowrap shrink-0">
+      {children}
+    </span>
+  );
+}
+
+// ─── Price card ───────────────────────────────────────────────────────────────
+
+function PriceCard({ price, checked, onCheck }) {
+  const hasBadges = price.model || price.isMetered;
 
   return (
-    <div className="flex flex-col gap-[1px]">
-      <div className="flex items-baseline gap-[3px]">
-        <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#334155] text-[13px] leading-[16px]">
-          {price.amount}
-        </span>
-        {price.unit && (
-          <span className="font-['Figtree:Regular',sans-serif] font-normal text-[#94a3b8] text-[11px] leading-[14px]">
-            {price.unit}
-          </span>
+    <div
+      onClick={onCheck}
+      className={`rounded-[8px] p-[12px] cursor-pointer transition-colors ${
+        checked ? 'bg-[#f1f5f9]' : 'hover:bg-[#f1f5f9]'
+      }`}
+    >
+      {/* Main row: check + price/unit + badges */}
+      <div className="flex items-center justify-between gap-[8px]">
+
+        {/* Left: check circle + price */}
+        <div className="flex items-center gap-[8px] flex-1 min-w-0">
+          <div className="shrink-0">
+            <CheckCircle checked={checked} onClick={(e) => { e.stopPropagation(); onCheck(); }} />
+          </div>
+          <div className="flex items-baseline gap-[3px] flex-wrap min-w-0">
+            {price.tiers ? (
+              <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#1e293b] text-[13px] leading-[normal]">
+                {tierPriceRange(price.tiers, price.unit)}
+              </span>
+            ) : price.amount ? (
+              <>
+                <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#1e293b] text-[13px] leading-[normal]">
+                  {price.amount}
+                </span>
+                {price.unit && (
+                  <span className="font-['Figtree:Regular',sans-serif] font-normal text-[#7c8ba1] text-[13px] leading-[16px]">
+                    {price.unit}
+                  </span>
+                )}
+              </>
+            ) : null}
+          </div>
+        </div>
+
+        {/* Right: badges — metered (conditional, left) + pricing model (always, right) */}
+        {hasBadges && (
+          <div className="flex items-center gap-[6px] shrink-0 flex-wrap justify-end">
+            {price.isMetered && <NeutralBadge>Metered</NeutralBadge>}
+            {price.model && <NeutralBadge>{price.model}</NeutralBadge>}
+          </div>
         )}
       </div>
-      <span className="font-['Figtree:Regular',sans-serif] font-normal text-[#94a3b8] text-[11px] leading-[13px]">
-        {price.model}
-      </span>
-    </div>
-  );
-}
 
-// ─── Price row (full, used when expanded) ─────────────────────────────────────
+      {/* Description */}
+      {price.description && (
+        <p className="font-['Figtree:Regular',sans-serif] font-normal text-[#7c8ba1] text-[12px] leading-[16px] pl-[26px] mt-[4px]">
+          {price.description}
+        </p>
+      )}
 
-function PriceRow({ price, checked, onCheck }) {
-  return (
-    <div className="flex items-start gap-[10px] py-[6px] cursor-pointer hover:bg-[#f8fafc] rounded-[4px]">
-      <div className="mt-[1px] shrink-0">
-        <CheckCircle checked={checked} onClick={onCheck} />
-      </div>
-      <PriceContent price={price} />
-    </div>
-  );
-}
-
-// ─── Collapsed selected price ─────────────────────────────────────────────────
-
-function CollapsedPrice({ price, onDeselect }) {
-  return (
-    <div className="flex items-center gap-[10px] py-[6px]">
-      <CheckCircle checked={true} onClick={onDeselect} />
-      <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#475569] text-[12px] leading-[16px]">
-        {priceSummary(price)}
-      </span>
+      {/* Tier rows for volume pricing */}
+      {price.tiers && price.tiers.length > 0 && (
+        <div className="pl-[26px] mt-[4px] flex flex-col gap-[4px]">
+          {price.tiers.map((tier, i) => {
+            const isLast  = i === price.tiers.length - 1;
+            const fromStr = fmtNum(tier.from);
+            const toStr   = isLast ? `${fromStr}+` : `${fromStr} – ${fmtNum(tier.to)}`;
+            return (
+              <div key={i} className="flex items-baseline gap-[6px]">
+                <span className="font-['Figtree:Regular',sans-serif] font-normal text-[#7c8ba1] text-[11px] leading-[16px] w-[60px] shrink-0">
+                  {toStr}
+                </span>
+                <span className="text-[#b0bac6] text-[11px]">→</span>
+                <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#475569] text-[11px] leading-[16px]">
+                  {tier.price}{price.unit ? <span className="font-normal text-[#7c8ba1]">{price.unit}</span> : null}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
 // ─── Product item ─────────────────────────────────────────────────────────────
 
-function ProductItem({ product, selectedPriceId, isExpanded, onToggle, onSelectPrice }) {
-  const selectedPrice = selectedPriceId ? product.prices.find(p => p.id === selectedPriceId) : null;
-
+function ProductItem({ product, selectedPriceId, onSelectPrice }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-[8px]">
 
-      {/* Header */}
-      <div
-        onClick={onToggle}
-        className="flex items-center justify-between py-[8px] cursor-pointer"
-      >
-        <div className="flex items-center gap-[8px] min-w-0 mr-[8px]">
-          <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#1e293b] text-[14px] leading-[18px] truncate">
-            {product.name}
-          </span>
-          <TypeTag type={product.type} />
-        </div>
-        <svg
-          width="10" height="6" viewBox="0 0 10 6" fill="none"
-          className={`shrink-0 text-[#94a3b8] transition-transform duration-150 ${isExpanded ? 'rotate-180' : ''}`}
-        >
-          <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+      {/* Header: name + type tag */}
+      <div className="flex items-center gap-[8px] flex-wrap">
+        <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#1e293b] text-[14px] leading-[normal]">
+          {product.name}
+        </span>
+        <TypeTag type={product.type} />
       </div>
 
-      {/* Prices */}
-      {(isExpanded || selectedPrice) && (
-        <div>
-          {isExpanded
-            ? product.prices.map(price => (
-                <PriceRow
-                  key={price.id}
-                  price={price}
-                  checked={selectedPriceId === price.id}
-                  onCheck={() => onSelectPrice(product.id, price.id)}
-                />
-              ))
-            : <CollapsedPrice
-                price={selectedPrice}
-                onDeselect={() => onSelectPrice(product.id, selectedPriceId)}
-              />
-          }
-        </div>
-      )}
+      {/* Price cards — always visible, no gap between them */}
+      <div className="flex flex-col">
+        {product.prices.map(price => (
+          <PriceCard
+            key={price.id}
+            price={price}
+            checked={selectedPriceId === price.id}
+            onCheck={() => onSelectPrice(product.id, price.id)}
+          />
+        ))}
+      </div>
 
     </div>
   );
 }
 
-// ─── Separator ────────────────────────────────────────────────────────────────
-
-function Separator() {
-  return <div className="h-px bg-[#e2e8f0] shrink-0" />;
-}
-
-function FullSeparator() {
-  return <div className="h-px bg-[#e2e8f0] shrink-0 -mx-[24px]" />;
-}
-
 // ─── Modal ────────────────────────────────────────────────────────────────────
 
-export default function AddProductModal({ isOpen, onClose, onAdd, existingProductIds = [] }) {
-  const [search,     setSearch]     = useState('');
+export default function AddProductModal({ isOpen, onClose, onAdd, onRemove, existingProductIds = [] }) {
+  const [search, setSearch] = useState('');
   const [selections, setSelections] = useState({});
-  const [expanded,   setExpanded]   = useState(() => new Set(PRODUCT_CATALOG.map(p => p.id)));
+  const [addedExpanded, setAddedExpanded] = useState(false);
 
-  const allAvailable = PRODUCT_CATALOG.filter(p => !existingProductIds.includes(p.id));
-
-  const selectedProducts   = allAvailable.filter(p =>  selections[p.id]);
-  const unselectedProducts = allAvailable.filter(p =>
-    !selections[p.id] &&
-    p.name.toLowerCase().includes(search.toLowerCase())
+  // Include a product if it wasn't already in the contract before this session opened,
+  // OR if the user just selected it (so it stays visible in the "Added" section).
+  const allAvailable = PRODUCT_CATALOG.filter(p =>
+    !existingProductIds.includes(p.id) || selections[p.id]
   );
 
-  function toggleExpand(productId) {
-    setExpanded(prev => {
-      const next = new Set(prev);
-      next.has(productId) ? next.delete(productId) : next.add(productId);
-      return next;
-    });
+  const addedProducts = allAvailable.filter(p => selections[p.id]);
+  const unaddedProducts = allAvailable
+    .filter(p => !selections[p.id])
+    .filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+
+  function buildProduct(productId, priceId) {
+    const now = new Date();
+    const mo = now.toLocaleString('en-US', { month: 'short' });
+    const startStr = `${mo} 01, ${now.getFullYear()}`;
+    const endStr = `${mo} 01, ${now.getFullYear() + 1}`;
+    const product = PRODUCT_CATALOG.find(p => p.id === productId);
+    const price = product.prices.find(p => p.id === priceId);
+    const cadenceText = price.billingFrequency === 'One-time'
+      ? 'One-time payment'
+      : `${price.billingType ? price.billingType + ' - ' : ''}Every ${price.billingFrequency}`;
+    return {
+      id: `added-${productId}-${Date.now()}-${Math.random()}`,
+      catalogId: productId,
+      name: product.name,
+      type: product.type,
+      metric: product.type,
+      period: `${startStr} → ${endStr}`,
+      billingDate: startStr,
+      priceInfo: {
+        billingType: price.billingType,
+        billingFrequency: price.billingFrequency,
+        isMetered: price.isMetered,
+      },
+      phases: [{
+        status: 'ONGOING',
+        range: 'Product Start →',
+        perUnitPrice: price.tiers ? `Volume (${price.tiers.length} tiers)` : price.amount,
+        quantityIncluded: '—',
+        billingCadence: `${price.isMetered ? 'Metered - ' : ''}${cadenceText}`,
+      }],
+    };
   }
 
   function selectPrice(productId, priceId) {
+    const isDeselect = selections[productId] === priceId;
     setSelections(prev => {
-      if (prev[productId] === priceId) {
-        setExpanded(e => new Set([...e, productId]));
+      if (isDeselect) {
         const next = { ...prev };
         delete next[productId];
         return next;
       }
-      setExpanded(e => { const n = new Set(e); n.delete(productId); return n; });
+      // Switching price on same product: first remove old, then add new
       return { ...prev, [productId]: priceId };
     });
+
+    if (isDeselect) {
+      onRemove?.(productId);
+    } else {
+      // If switching from one price to another on the same product, remove old first
+      if (selections[productId]) onRemove?.(productId);
+      onAdd([buildProduct(productId, priceId)]);
+    }
   }
 
-  function handleAdd() {
-    const now      = new Date();
-    const mo       = now.toLocaleString('en-US', { month: 'short' });
-    const startStr = `${mo} 01, ${now.getFullYear()}`;
-    const endStr   = `${mo} 01, ${now.getFullYear() + 1}`;
-
-    const newProducts = Object.entries(selections).map(([productId, priceId]) => {
-      const product = PRODUCT_CATALOG.find(p => p.id === productId);
-      const price   = product.prices.find(p => p.id === priceId);
-      return {
-        id:          `added-${productId}-${Date.now()}-${Math.random()}`,
-        catalogId:   productId,
-        name:        product.name,
-        type:        product.type,
-        metric:      product.metric,
-        period:      `${startStr} → ${endStr}`,
-        billingDate: startStr,
-        phases: [
-          {
-            status:           'ONGOING',
-            range:            'Product Start →',
-            perUnitPrice:     price.tiers ? `Volume (${price.tiers.length} tiers)` : price.amount,
-            quantityIncluded: '—',
-            billingCadence:   price.model === 'Flat Fee' ? 'Prepaid - Every Month' : 'Postpaid - Every Month',
-          },
-        ],
-      };
-    });
-
-    onAdd(newProducts);
+  function handleDone() {
     handleClose();
   }
 
   function handleClose() {
     setSelections({});
     setSearch('');
-    setExpanded(new Set(PRODUCT_CATALOG.map(p => p.id)));
+    setAddedExpanded(false);
     onClose();
   }
 
-  const selectedCount = selectedProducts.length;
+  const selectedCount = addedProducts.length;
 
   if (!isOpen) return null;
 
@@ -374,35 +488,16 @@ export default function AddProductModal({ isOpen, onClose, onAdd, existingProduc
             </p>
           </div>
           <button onClick={handleClose} className="flex items-center justify-center cursor-pointer bg-transparent border-0 p-0">
-            <div className="h-[25px] w-[25px] relative">
-              <img alt="Close" className="absolute block max-w-none size-full" src={imgClose} />
-            </div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[#94a3b8] hover:text-[#64748b]">
+              <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
         </div>
 
-        {/* Controls: create button + OR + search */}
-        <div className="px-[24px] pt-[24px] pb-[20px] shrink-0 flex flex-col gap-[20px]">
-
-          {/* Create new product */}
-          <button className="w-full flex items-center justify-center gap-[6px] h-[44px] bg-white border border-[#cbd5e1] rounded-[6px] cursor-pointer hover:bg-[#f8fafc]">
-            <svg width="11" height="11" viewBox="0 0 10 10" fill="none" className="text-[#334155] shrink-0">
-              <path d="M5 1V9M1 5H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-            <span className="font-['Figtree:Bold',sans-serif] font-bold text-[#334155] text-[12px] tracking-[0.2px] uppercase">
-              Create new product
-            </span>
-          </button>
-
-          {/* OR divider */}
-          <div className="flex items-center gap-[13px]">
-            <div className="flex-1 h-px bg-[#e2e8f0]" />
-            <span className="font-['Figtree:Regular',sans-serif] font-normal text-[#7c8ba1] text-[12px]">OR</span>
-            <div className="flex-1 h-px bg-[#e2e8f0]" />
-          </div>
-
-          {/* Search */}
-          <div className="bg-[#f8fafc] flex h-[44px] items-center gap-[10px] px-[12px] rounded-[6px] border border-[#e2e8f0]">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0 text-[#94a3b8]">
+        {/* Search */}
+        <div className="px-[24px] pt-[24px] shrink-0">
+          <div className="bg-[#f8fafc] flex h-[44px] items-center gap-[10px] px-[12.8px] rounded-[6px] border border-[#e2e8f0]">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0 text-[#b0bac6]">
               <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5" />
               <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
@@ -414,61 +509,83 @@ export default function AddProductModal({ isOpen, onClose, onAdd, existingProduc
               className="flex-1 bg-transparent border-0 outline-none font-['Figtree:Regular',sans-serif] font-normal text-[#1e293b] text-[13px] placeholder:text-[#94a3b8]"
             />
             {search && (
-              <button onClick={() => setSearch('')} className="text-[#94a3b8] bg-transparent border-0 cursor-pointer text-[16px] leading-none p-0">×</button>
+              <button onClick={() => setSearch('')} className="text-[#b0bac6] hover:text-[#64748b] bg-transparent border-0 cursor-pointer text-[16px] leading-none p-0">×</button>
             )}
           </div>
-
         </div>
 
-        {/* List */}
+        {/* Product list */}
         <div className="flex-1 overflow-y-auto">
-          <div className="px-[24px] pb-[24px] flex flex-col gap-[16px]">
+          <div className="px-[24px] py-[24px] flex flex-col gap-[16px]">
 
-            {/* Selected section */}
-            {selectedProducts.length > 0 && (
+            {/* ── ADDED section — collapsible, collapsed by default ── */}
+            {selectedCount > 0 && (
               <>
-                <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#64748b] text-[12px] uppercase leading-[16.5px]">
-                  Added ({selectedCount})
-                </span>
-                {selectedProducts.map((product, i) => (
-                  <div key={product.id} className="flex flex-col gap-[16px]">
-                    {i > 0 && <Separator />}
-                    <ProductItem
-                      product={product}
-                      selectedPriceId={selections[product.id]}
-                      isExpanded={expanded.has(product.id)}
-                      onToggle={() => toggleExpand(product.id)}
-                      onSelectPrice={selectPrice}
-                    />
+                {/* Section header — clickable to collapse/expand */}
+                <button
+                  onClick={() => setAddedExpanded(v => !v)}
+                  className="flex items-center justify-between w-full bg-transparent border-0 p-0 cursor-pointer"
+                >
+                  <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#64748b] text-[12px] uppercase tracking-[0.5px] leading-[16.5px]">
+                    Added ({selectedCount})
+                  </span>
+                  <svg
+                    width="10" height="6" viewBox="0 0 10 6" fill="none"
+                    className={`text-[#94a3b8] transition-transform duration-150 ${addedExpanded ? 'rotate-180' : ''}`}
+                  >
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+
+                {/* Expanded product list */}
+                {addedExpanded && (
+                  <div className="flex flex-col gap-[16px]">
+                    {addedProducts.map(product => (
+                      <ProductItem
+                        key={product.id}
+                        product={product}
+                        selectedPriceId={selections[product.id]}
+                        onSelectPrice={selectPrice}
+                      />
+                    ))}
                   </div>
-                ))}
-                <FullSeparator />
+                )}
+
+                {/* Full-width separator */}
+                <div className="h-px bg-[#e2e8f0] -mx-[24px]" />
               </>
             )}
 
-            {/* Available products label */}
-            <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#64748b] text-[12px] uppercase leading-[16.5px]">
-              Available Products
-            </span>
+            {/* ── AVAILABLE PRODUCTS ── */}
+            <div className="flex items-center justify-between">
+              <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#64748b] text-[12px] uppercase tracking-[0.5px] leading-[16.5px]">
+                Available Products
+              </span>
+              <button className="flex items-center gap-[4px] bg-transparent border-0 cursor-pointer p-0">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0">
+                  <path d="M8 3V13M3 8H13" stroke="#1145bc" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#1145bc] text-[12px] uppercase leading-[normal]">
+                  Create Product
+                </span>
+              </button>
+            </div>
+            <div className="h-px bg-[#f1f5f9]" />
 
-            {/* Empty state */}
-            {unselectedProducts.length === 0 && (
-              <div className="flex items-center justify-center py-[40px]">
-                <p className="font-['Figtree:Regular',sans-serif] font-normal text-[#94a3b8] text-[13px]">
+            {unaddedProducts.length === 0 && (
+              <div className="flex items-center justify-center py-[32px]">
+                <p className="font-['Figtree:Regular',sans-serif] font-normal text-[#b0bac6] text-[13px]">
                   {search ? 'No products match your search' : 'All products have been added'}
                 </p>
               </div>
             )}
 
-            {/* Unselected products */}
-            {unselectedProducts.map((product, i) => (
+            {unaddedProducts.map((product, i) => (
               <div key={product.id} className="flex flex-col gap-[16px]">
-                {i > 0 && <Separator />}
+                {i > 0 && <div className="h-px bg-[#f1f5f9]" />}
                 <ProductItem
                   product={product}
                   selectedPriceId={selections[product.id]}
-                  isExpanded={expanded.has(product.id)}
-                  onToggle={() => toggleExpand(product.id)}
                   onSelectPrice={selectPrice}
                 />
               </div>
@@ -477,42 +594,23 @@ export default function AddProductModal({ isOpen, onClose, onAdd, existingProduc
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Footer — Done only */}
         <div className="flex items-center justify-between px-[24px] py-[14px] border-t border-[#e2e8f0] shrink-0 bg-white">
-          <div className="flex items-center gap-[6px]">
-            {selectedCount > 0 && (
-              <div className="w-[20px] h-[20px] rounded-full bg-[#ed765e] flex items-center justify-center shrink-0">
-                <span className="font-['Figtree:Bold',sans-serif] font-bold text-white text-[11px] leading-none">{selectedCount}</span>
-              </div>
-            )}
-            <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#64748b] text-[13px]">
-              {selectedCount > 0
-                ? `${selectedCount} product${selectedCount !== 1 ? 's' : ''} added`
-                : 'No products added yet'}
-            </span>
-          </div>
-          <div className="flex gap-[8px]">
-            <button
-              onClick={handleClose}
-              className="flex h-[32px] items-center justify-center px-[16px] rounded-[4px] cursor-pointer bg-transparent border-0 font-['Figtree:Bold',sans-serif] font-bold text-[#334155] text-[12px] tracking-[0.2px] uppercase"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleAdd}
-              disabled={selectedCount === 0}
-              className={`flex h-[32px] items-center justify-center px-[16px] rounded-[4px] border-0 font-['Figtree:Bold',sans-serif] font-bold text-[12px] tracking-[0.2px] uppercase whitespace-nowrap ${
-                selectedCount > 0
-                  ? 'bg-[#ed765e] text-white cursor-pointer'
-                  : 'bg-[#f1f5f9] text-[#94a3b8] cursor-not-allowed'
-              }`}
-            >
-              Done
-            </button>
-          </div>
+          <span className="font-['Figtree:Regular',sans-serif] font-normal text-[#64748b] text-[13px] leading-[19.5px]">
+            {selectedCount > 0
+              ? `${selectedCount} product${selectedCount !== 1 ? 's' : ''} added to contract`
+              : ''}
+          </span>
+          <button
+            onClick={handleDone}
+            className="flex h-[32px] items-center justify-center px-[20px] rounded-[4px] border-0 bg-[#ed765e] text-white cursor-pointer hover:bg-[#e56a52] font-['Figtree:Bold',sans-serif] font-bold text-[12px] tracking-[0.2px] uppercase whitespace-nowrap transition-colors"
+          >
+            Done
+          </button>
         </div>
 
       </div>
     </>
   );
 }
+
