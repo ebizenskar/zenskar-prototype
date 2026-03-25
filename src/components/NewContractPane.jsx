@@ -295,6 +295,7 @@ function SubLabel({ children }) {
 // ─── Pane ─────────────────────────────────────────────────────────────────────
 
 export default function NewContractPane({ isOpen, onClose, onCreate }) {
+  // ── Form State ──
   const [customer, setCustomer] = useState('');
   const [currency, setCurrency] = useState('');
   const [startDate, setStartDate] = useState(firstOfMonth(0));
