@@ -1,7 +1,29 @@
-// Asset URLs from Figma MCP server
-const imgArrowLeft  = "http://localhost:3845/assets/8fe903ba6db4971d7e2cfd3d32eda0b20517a2bc.svg";
-const imgArrowRight = "http://localhost:3845/assets/fd07f00a1f332e2e1bbf66dbc84813033c7d6e6b.svg";
-const imgUpArrow    = "http://localhost:3845/assets/8e7baa0024e3eb6951bd3302886b655e7cefaadb.svg";
+import { useState, useEffect, useRef } from 'react';
+
+// Icons as inline SVG components
+function ArrowLeft() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <path d="M6 9L2 5L6 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ArrowRight() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <path d="M4 1L8 5L4 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function UpArrow() {
+  return (
+    <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+      <path d="M1 5L4 2L7 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 // ─── Phase Column ─────────────────────────────────────────────────────────────
 
@@ -70,7 +92,7 @@ function PhaseColumn({ phase }) {
 
       {/* Details toggle */}
       <button className="flex items-center gap-[8px] text-[#64748b] text-[12px] font-['Figtree:Regular',sans-serif] font-normal bg-transparent border-0 cursor-pointer p-0 self-start leading-none">
-        <img alt="" className="block h-[8px] w-[8px]" src={imgUpArrow} />
+        <UpArrow />
         <span>Details</span>
       </button>
     </div>
@@ -79,7 +101,22 @@ function PhaseColumn({ phase }) {
 
 // ─── Product Card ─────────────────────────────────────────────────────────────
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onRemove }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close the dropdown when clicking outside
+  useEffect(() => {
+    if (!menuOpen) return;
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [menuOpen]);
+
   return (
     <div className="border border-[#e2e8f0] rounded-[16px] bg-white overflow-hidden">
 
@@ -109,10 +146,32 @@ export default function ProductCard({ product }) {
         </div>
 
         {/* 3-dot menu */}
-        <div className="flex flex-col gap-[2px] items-center justify-center h-[24px] w-[22px] shrink-0 cursor-pointer pt-[1px]">
-          {[0, 1, 2].map(i => (
-            <div key={i} className="bg-[#94a3b8] rounded-full" style={{ width: '2.664px', height: '2.664px' }} />
-          ))}
+        <div ref={menuRef} className="relative shrink-0">
+          <button
+            onClick={() => setMenuOpen(v => !v)}
+            className="flex flex-col gap-[2px] items-center justify-center h-[24px] w-[22px] cursor-pointer bg-transparent border-0 p-0 pt-[1px] hover:opacity-70 transition-opacity"
+          >
+            {[0, 1, 2].map(i => (
+              <div key={i} className="bg-[#94a3b8] rounded-full" style={{ width: '2.664px', height: '2.664px' }} />
+            ))}
+          </button>
+
+          {/* Dropdown menu */}
+          {menuOpen && (
+            <div className="absolute right-0 top-[28px] bg-white border border-[#e2e8f0] rounded-[8px] shadow-[0_4px_16px_rgba(0,0,0,0.10)] py-[4px] min-w-[128px] z-10">
+              <button
+                onClick={() => { setMenuOpen(false); onRemove?.(); }}
+                className="flex items-center gap-[8px] w-full px-[12px] py-[8px] bg-transparent border-0 cursor-pointer text-left hover:bg-[#fff5f5] transition-colors"
+              >
+                <svg width="12" height="13" viewBox="0 0 12 13" fill="none">
+                  <path d="M1 3.5h10M4.5 3.5V2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M2 3.5l.667 7a1 1 0 0 0 1 .9h4.666a1 1 0 0 0 1-.9L10 3.5" stroke="#ef4444" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#ef4444] text-[12px] leading-none whitespace-nowrap">
+                  Remove product
+                </span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -132,11 +191,11 @@ export default function ProductCard({ product }) {
         </div>
         {/* Nav arrows */}
         <div className="flex items-center gap-[4px]">
-          <button className="bg-white border border-[#e2e8f0] flex items-center justify-center rounded-full size-[24px] p-[1px] cursor-pointer opacity-30" disabled>
-            <img alt="prev" className="block size-[10px]" src={imgArrowLeft} />
+          <button className="bg-white border border-[#e2e8f0] flex items-center justify-center rounded-full size-[24px] p-[1px] cursor-pointer opacity-30 text-[#94a3b8]" disabled>
+            <ArrowLeft />
           </button>
-          <button className="bg-white border border-[#e2e8f0] flex items-center justify-center rounded-full size-[24px] p-[1px] cursor-pointer">
-            <img alt="next" className="block size-[10px]" src={imgArrowRight} />
+          <button className="bg-white border border-[#e2e8f0] flex items-center justify-center rounded-full size-[24px] p-[1px] cursor-pointer text-[#94a3b8]">
+            <ArrowRight />
           </button>
         </div>
       </div>
