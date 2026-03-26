@@ -287,8 +287,7 @@ function DiscountBadge({ pct }) {
 // ─── Price card ───────────────────────────────────────────────────────────────
 
 function PriceCard({ price, checked, onCheck }) {
-  const isPackage = price.model === 'Package Price';
-  const hasBadges = price.discount || isPackage;
+  const hasBadges = !!price.discount;
 
   return (
     <div
@@ -325,11 +324,10 @@ function PriceCard({ price, checked, onCheck }) {
           </div>
         </div>
 
-        {/* Right: badges — discount + package model */}
+        {/* Right: badges — discount */}
         {hasBadges && (
           <div className="flex items-center gap-[6px] shrink-0 flex-wrap justify-end">
             {price.discount && <DiscountBadge pct={price.discount} />}
-            {isPackage && <NeutralBadge>Package</NeutralBadge>}
           </div>
         )}
       </div>
