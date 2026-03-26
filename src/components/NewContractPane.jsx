@@ -10,11 +10,15 @@ function CloseIcon() {
   );
 }
 
-function FileTextIcon() {
+function SparkleIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-      <path d="M12 2H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7l-5-5z" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M12 2v5h5M7 11h6M7 14h6" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Main 4-pointed star */}
+      <path d="M10 2.5L11.8 8.2L17.5 10L11.8 11.8L10 17.5L8.2 11.8L2.5 10L8.2 8.2L10 2.5Z"
+        stroke="#8b5cf6" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round"/>
+      {/* Small satellite star */}
+      <path d="M16 2L16.55 3.45L18 4L16.55 4.55L16 6L15.45 4.55L14 4L15.45 3.45L16 2Z"
+        stroke="#8b5cf6" strokeWidth="1" strokeLinejoin="round" strokeLinecap="round"/>
     </svg>
   );
 }
@@ -353,6 +357,8 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
       startDate,
       endDate,
       billingStartDate,
+      description,
+      tags,
       defaultBillingCadence: cadenceType
         ? { type: cadenceType, offset: billingOffset, every: billingEvery, cadence: billingCadence }
         : null,
@@ -396,13 +402,13 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
 
         {/* ── Scrollable content ── */}
         <div className="flex-1 overflow-y-auto border-b border-[#e2e8f0]">
-          <div className="flex flex-col gap-[24px] items-start px-[36px] py-[24px] w-full">
+          <div className="flex flex-col gap-[32px] items-start px-[36px] py-[32px] w-full">
 
             {/* Upload card */}
             <div className="bg-[#f9f9f9] border border-[#f1f5f9] flex items-center justify-between p-[16px] rounded-[8px] w-full">
               <div className="flex flex-[1_0_0] gap-[16px] items-center min-w-0">
-                <div className="border border-[#e2e8f0] flex items-center justify-center p-[12px] rounded-[6px] shrink-0">
-                  <FileTextIcon />
+                <div className="border border-[#ede9fe] bg-[#f5f3ff] flex items-center justify-center p-[12px] rounded-[6px] shrink-0">
+                  <SparkleIcon />
                 </div>
                 <div className="flex flex-[1_0_0] flex-col gap-[6px] items-start min-w-0">
                   <p className="font-['Figtree:Bold',sans-serif] font-bold text-[#1e293b] text-[13px] leading-[14px] whitespace-nowrap">
@@ -453,25 +459,17 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
               <SectionHeader label="Contract Period" />
               <div className="flex gap-[8px] items-start w-full">
                 <div className="flex-[1_0_0] min-w-0">
-                  <DateField label="Contract Start Date" value={startDate} onChange={handleStartDateChange} />
+                  <DateField label="Start Date" value={startDate} onChange={handleStartDateChange} />
                 </div>
                 <div className="flex-[1_0_0] min-w-0">
-                  <DateField label="Contract End Date" value={endDate} onChange={setEndDate} />
+                  <DateField label="End Date" value={endDate} onChange={setEndDate} />
                 </div>
-              </div>
-              <div className="flex flex-col gap-[4px] items-start w-full">
-                <DateField
-                  label="Billing Start Date"
-                  value={billingStartDate}
-                  onChange={setBillingStartDate}
-                />
-                <HelperText>The date from which billing begins. Defaults to the contract start date.</HelperText>
               </div>
             </div>
 
-            {/* ── Default Billing Cadence ── */}
+            {/* ── Billing Cadence ── */}
             <div className="flex flex-col gap-[12px] items-start w-full">
-              <SectionHeader label="Default Billing Cadence" />
+              <SectionHeader label="Billing Cadence" />
 
               {/* Radio buttons */}
               <div className="flex gap-[16px] items-center px-[4px]">
@@ -486,11 +484,6 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
                   onChange={() => setCadenceType(cadenceType === 'one-time' ? '' : 'one-time')}
                 />
               </div>
-
-              {/* Empty state helper */}
-              {!cadenceType && (
-                <HelperText>Optional. Products without a billing cadence will use this default billing cadence.</HelperText>
-              )}
 
               {/* Recurring: Offset + Every + Cadence */}
               {cadenceType === 'recurring' && (
@@ -533,10 +526,8 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
                 />
               )}
 
-              {/* Filled state helper */}
-              {cadenceType && (
-                <HelperText>Products without a billing cadence will inherit this. You can still override it per product.</HelperText>
-              )}
+              <HelperText>This can be overridden for each product later.</HelperText>
+
             </div>
 
             {/* ── Additional Details ── */}

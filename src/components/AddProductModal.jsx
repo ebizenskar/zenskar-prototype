@@ -98,7 +98,7 @@ export const PRODUCT_CATALOG = [
     prices: [
       {
         id: 'rc-p1',
-        model: 'Per Unit Price',
+        model: 'Package Price',
         amount: '$50.00',
         unit: '/50 credits',
         billingType: null,
@@ -287,7 +287,8 @@ function DiscountBadge({ pct }) {
 // ─── Price card ───────────────────────────────────────────────────────────────
 
 function PriceCard({ price, checked, onCheck }) {
-  const hasBadges = price.isMetered || price.discount;
+  const isPackage = price.model === 'Package Price';
+  const hasBadges = price.discount || isPackage;
 
   return (
     <div
@@ -324,11 +325,11 @@ function PriceCard({ price, checked, onCheck }) {
           </div>
         </div>
 
-        {/* Right: badges — metered (conditional, left) + pricing model (always, right) */}
+        {/* Right: badges — discount + package model */}
         {hasBadges && (
           <div className="flex items-center gap-[6px] shrink-0 flex-wrap justify-end">
             {price.discount && <DiscountBadge pct={price.discount} />}
-            {price.isMetered && <NeutralBadge>Metered</NeutralBadge>}
+            {isPackage && <NeutralBadge>Package</NeutralBadge>}
           </div>
         )}
       </div>
@@ -371,12 +372,11 @@ function ProductItem({ product, selectedPriceId, onSelectPrice }) {
   return (
     <div className="flex flex-col gap-[8px]">
 
-      {/* Header: name + type tag */}
+      {/* Header: name */}
       <div className="flex items-center gap-[8px] flex-wrap">
         <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#1e293b] text-[14px] leading-[normal]">
           {product.name}
         </span>
-        <TypeTag type={product.type} />
       </div>
 
       {/* Price cards — always visible, no gap between them */}
@@ -397,7 +397,7 @@ function ProductItem({ product, selectedPriceId, onSelectPrice }) {
 
 // ─── Modal ────────────────────────────────────────────────────────────────────
 
-export default function AddProductModal({ isOpen, onClose, onAdd, onRemove, existingProductIds = [] }) {
+export default function AddProductModal({ isOpen, onClose, onAdd, onRemove, onDone, existingProductIds = [] }) {
   const [search, setSearch] = useState('');
   const [selections, setSelections] = useState({});
   const [addedExpanded, setAddedExpanded] = useState(false);
@@ -417,9 +417,13 @@ export default function AddProductModal({ isOpen, onClose, onAdd, onRemove, exis
     const now = new Date();
     const mo = now.toLocaleString('en-US', { month: 'short' });
     const startStr = `${mo} 01, ${now.getFullYear()}`;
-    const endStr = `${mo} 01, ${now.getFullYear() + 1}`;
+    const endStr   = `${mo} 01, ${now.getFullYear() + 1}`;
+    const startISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    const endDate  = new Date(now.getFullYear() + 1, now.getMonth(), 1);
+    const endISO   = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}-01`;
+
     const product = PRODUCT_CATALOG.find(p => p.id === productId);
-    const price = product.prices.find(p => p.id === priceId);
+    const price   = product.prices.find(p => p.id === priceId);
     const cadenceText = price.billingFrequency === 'One-time'
       ? 'One-time payment'
       : `${price.billingType ? price.billingType + ' - ' : ''}Every ${price.billingFrequency}`;
@@ -428,9 +432,10 @@ export default function AddProductModal({ isOpen, onClose, onAdd, onRemove, exis
       catalogId: productId,
       name: product.name,
       type: product.type,
-      metric: product.type,
+      metric: 'Quantity',
       period: `${startStr} → ${endStr}`,
       billingDate: startStr,
+      isMetered: price.isMetered,
       priceInfo: {
         billingType: price.billingType,
         billingFrequency: price.billingFrequency,
@@ -438,10 +443,13 @@ export default function AddProductModal({ isOpen, onClose, onAdd, onRemove, exis
       },
       phases: [{
         status: 'ONGOING',
-        range: 'Product Start →',
+        range: `${startStr} → ${endStr}`,
         perUnitPrice: price.tiers ? tierPriceRange(price.tiers, price.unit) : price.amount,
-        quantityIncluded: '—',
+        quantityIncluded: '1 unit',
         billingCadence: `${price.isMetered ? 'Metered - ' : ''}${cadenceText}`,
+        discount: price.discount ? `${price.discount}% off` : undefined,
+        startDate: startISO,
+        endDate: endISO,
       }],
     };
   }
@@ -472,10 +480,12 @@ export default function AddProductModal({ isOpen, onClose, onAdd, onRemove, exis
   }
 
   function handleClose() {
+    const hadSelections = addedProducts.length > 0;
     setSelections({});
     setSearch('');
     setAddedExpanded(false);
     onClose();
+    if (hadSelections) onDone?.();
   }
 
   const selectedCount = addedProducts.length;

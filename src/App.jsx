@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NewContractPane from './components/NewContractPane.jsx';
 import ContractDetailsPage from './components/ContractDetailsPage.jsx';
 import profilePhoto from './assets/images/profile-john-doe.png';
@@ -308,22 +308,59 @@ export default function App() {
   const [view, setView] = useState('list');
   const [selectedContract, setSelectedContract] = useState(null);
 
+  // ── Browser history sync ────────────────────────────────────────────────
+  useEffect(() => {
+    // On first load, restore from history state (handles F5 refresh on detail page)
+    const hs = window.history.state;
+    if (hs?.view === 'detail' && hs?.contract) {
+      setSelectedContract(hs.contract);
+      setView('detail');
+    } else {
+      // Stamp the initial list entry so back always has a target
+      window.history.replaceState({ view: 'list' }, '');
+    }
+
+    function handlePopState(e) {
+      if (e.state?.view === 'detail' && e.state?.contract) {
+        setSelectedContract(e.state.contract);
+        setView('detail');
+      } else {
+        setSelectedContract(null);
+        setView('list');
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   function handleRowClick(contract) {
     setSelectedContract(contract);
     setView('detail');
+    window.history.pushState({ view: 'detail', contract }, '');
   }
 
   function handleCreateContract(data) {
-    setSelectedContract({
+    const contract = {
       id: `new-${Date.now()}`,
       name: data.name,
       customer: data.customer,
       currency: data.currency,
       startDate: data.startDate,
       endDate: data.endDate,
+      billingStartDate: data.billingStartDate,
+      description: data.description || '',
+      tags: data.tags || [],
       isNew: true,
-    });
+    };
+    setSelectedContract(contract);
     setView('detail');
+    window.history.pushState({ view: 'detail', contract }, '');
+  }
+
+  function handleBack() {
+    // Let the browser navigate back — the popstate listener will update state
+    window.history.back();
   }
 
   if (view === 'detail' && selectedContract) {
@@ -332,7 +369,7 @@ export default function App() {
         <Sidebar />
         <ContractDetailsPage
           contract={selectedContract}
-          onBack={() => { setView('list'); setSelectedContract(null); }}
+          onBack={handleBack}
           isNew={selectedContract?.isNew}
         />
       </div>
