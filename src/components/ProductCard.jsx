@@ -826,7 +826,7 @@ export default function ProductCard({
 
               {/* View Timeline(s) toggle — show whenever dates are available */}
               {overallStartDate && overallEndDate && (
-                <div className="w-full mt-[12px]">
+                <div className="w-full mt-[6px]">
                   <button
                     onClick={() => setTimelinesOpen(!timelinesOpen)}
                     className="flex gap-[8px] items-center h-[17px] bg-transparent border-none p-0 cursor-pointer"

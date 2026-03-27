@@ -298,7 +298,7 @@ function SubLabel({ children }) {
 
 // ─── Pane ─────────────────────────────────────────────────────────────────────
 
-export default function NewContractPane({ isOpen, onClose, onCreate }) {
+export default function NewContractPane({ isOpen, onClose, onCreate, editMode = false }) {
   // ── Form State ──
   const [customer, setCustomer] = useState('');
   const [currency, setCurrency] = useState('');
@@ -393,7 +393,7 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
         {/* ── Top bar ── */}
         <div className="bg-white border-b border-[#e2e8f0] flex h-[57px] items-center justify-between p-[16px] shrink-0">
           <p className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[#334155] text-[14px] leading-[normal]">
-            New Contract
+            {editMode ? 'Edit Contract Details' : 'New Contract'}
           </p>
           <button onClick={onClose} className="flex items-center justify-center cursor-pointer bg-transparent border-0 p-0">
             <CloseIcon />
@@ -404,8 +404,8 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
         <div className="flex-1 overflow-y-auto border-b border-[#e2e8f0]">
           <div className="flex flex-col gap-[32px] items-start px-[36px] py-[32px] w-full">
 
-            {/* Upload card */}
-            <div className="bg-[#f9f9f9] border border-[#f1f5f9] flex items-center justify-between p-[16px] rounded-[8px] w-full">
+            {/* Upload card — hidden in edit mode */}
+            {!editMode && <div className="bg-[#f9f9f9] border border-[#f1f5f9] flex items-center justify-between p-[16px] rounded-[8px] w-full">
               <div className="flex flex-[1_0_0] gap-[16px] items-center min-w-0">
                 <div className="border border-[#ede9fe] bg-[#f5f3ff] flex items-center justify-center p-[12px] rounded-[6px] shrink-0">
                   <SparkleIcon />
@@ -429,22 +429,24 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
                   </div>
                 </div>
               </div>
-            </div>
+            </div>}
 
-            {/* Or Create Manually divider */}
-            <div className="flex gap-[13px] items-center w-full">
-              <div className="flex-[1_0_0] h-px bg-[#e2e8f0]" />
-              <p className="font-['Figtree:Regular',sans-serif] font-normal text-[#7c8ba1] text-[12px] leading-[normal] shrink-0">
-                Or Create Manually
-              </p>
-              <div className="flex-[1_0_0] h-px bg-[#e2e8f0]" />
-            </div>
+            {/* Or Create Manually divider — hidden in edit mode */}
+            {!editMode && (
+              <div className="flex gap-[13px] items-center w-full">
+                <div className="flex-[1_0_0] h-px bg-[#e2e8f0]" />
+                <p className="font-['Figtree:Regular',sans-serif] font-normal text-[#7c8ba1] text-[12px] leading-[normal] shrink-0">
+                  Or Create Manually
+                </p>
+                <div className="flex-[1_0_0] h-px bg-[#e2e8f0]" />
+              </div>
+            )}
 
             {/* ── Contract Details ── */}
             <div className="flex flex-col gap-[16px] items-start w-full">
               <SectionHeader label="Contract Details" />
               <div className="flex flex-col gap-[12px] items-start w-full">
-                <CustomerField customer={customer} onChange={handleCustomerChange} />
+                {!editMode && <CustomerField customer={customer} onChange={handleCustomerChange} />}
                 <div className="flex flex-col gap-[4px] items-start w-full">
                   <CurrencyField currency={currency} onChange={setCurrency} />
                   <HelperText>
@@ -465,6 +467,10 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
                   <DateField label="End Date" value={endDate} onChange={setEndDate} />
                 </div>
               </div>
+              {/* Anchor Date — edit mode only */}
+              {editMode && (
+                <DateField label="Anchor Date" value={billingStartDate} onChange={setBillingStartDate} />
+              )}
             </div>
 
             {/* ── Billing Cadence ── */}
@@ -532,43 +538,55 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
 
             {/* ── Additional Details ── */}
             <div className="flex flex-col items-start w-full">
-              <button
-                onClick={() => setAdditionalOpen((v) => !v)}
-                className="flex gap-[10px] items-center px-[4px] w-full bg-transparent border-0 cursor-pointer text-left"
-              >
-                <p className={`font-['Figtree:SemiBold',sans-serif] font-semibold text-[14px] leading-[14px] whitespace-nowrap ${additionalOpen ? 'text-[#1e293b]' : 'text-[#7c8ba1]'}`}>
-                  Additional Details
-                </p>
-                <div className={`transition-transform ${additionalOpen ? 'rotate-180' : ''} ${additionalOpen ? 'text-[#1e293b]' : 'text-[#7c8ba1]'}`}>
-                  <ChevronDownIcon />
+              {/* In edit mode: always open, no collapse button */}
+              {!editMode && (
+                <button
+                  onClick={() => setAdditionalOpen((v) => !v)}
+                  className="flex gap-[10px] items-center px-[4px] w-full bg-transparent border-0 cursor-pointer text-left"
+                >
+                  <p className={`font-['Figtree:SemiBold',sans-serif] font-semibold text-[14px] leading-[14px] whitespace-nowrap ${additionalOpen ? 'text-[#1e293b]' : 'text-[#7c8ba1]'}`}>
+                    Additional Details
+                  </p>
+                  <div className={`transition-transform ${additionalOpen ? 'rotate-180' : ''} ${additionalOpen ? 'text-[#1e293b]' : 'text-[#7c8ba1]'}`}>
+                    <ChevronDownIcon />
+                  </div>
+                </button>
+              )}
+              {editMode && (
+                <div className="flex items-center px-[4px] w-full">
+                  <p className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[14px] leading-[14px] text-[#1e293b] whitespace-nowrap">
+                    Additional Details
+                  </p>
                 </div>
-              </button>
+              )}
 
-              {additionalOpen && (
+              {(additionalOpen || editMode) && (
                 <div className="flex flex-col gap-[20px] items-start w-full mt-[16px]">
 
                   {/* ── Contract Name, Description, Tags ── */}
                   <div className="flex flex-col gap-[16px] items-start w-full">
-                    {/* Contract Name — pre-filled with customer name */}
-                    <InputField
-                      label="Contract Name"
-                      value={contractName || customer}
-                      onChange={setContractName}
-                      placeholder="Enter contract name..."
-                    />
-
-                    {/* Description */}
-                    <div className="flex flex-col gap-[4px] items-start w-full">
-                      <TextareaField
-                        label="Description"
-                        value={description}
-                        onChange={setDescription}
-                        placeholder="Internal notes about this contract..."
-                      />
-                      <HelperText>
-                        Name and description are for internal use and are not visible to customers.
-                      </HelperText>
-                    </div>
+                    {/* Contract Name + Description — hidden in edit mode */}
+                    {!editMode && (
+                      <>
+                        <InputField
+                          label="Contract Name"
+                          value={contractName || customer}
+                          onChange={setContractName}
+                          placeholder="Enter contract name..."
+                        />
+                        <div className="flex flex-col gap-[4px] items-start w-full">
+                          <TextareaField
+                            label="Description"
+                            value={description}
+                            onChange={setDescription}
+                            placeholder="Internal notes about this contract..."
+                          />
+                          <HelperText>
+                            Name and description are for internal use and are not visible to customers.
+                          </HelperText>
+                        </div>
+                      </>
+                    )}
 
                     {/* Tags */}
                     <div className="flex flex-col gap-[8px] items-start w-full">
@@ -655,15 +673,15 @@ export default function NewContractPane({ isOpen, onClose, onCreate }) {
             </p>
           </button>
           <button
-            onClick={handleContinue}
-            disabled={!canContinue}
-            className={`flex h-[32px] items-center justify-center px-[16px] rounded-[4px] border-0 transition-colors ${canContinue
+            onClick={editMode ? onClose : handleContinue}
+            disabled={!editMode && !canContinue}
+            className={`flex h-[32px] items-center justify-center px-[16px] rounded-[4px] border-0 transition-colors ${(editMode || canContinue)
                 ? 'bg-[#ed765e] cursor-pointer hover:bg-[#e56a52]'
                 : 'bg-[#f1f5f9] cursor-not-allowed'
               }`}
           >
-            <p className={`font-['Figtree:Bold',sans-serif] font-bold text-[12px] tracking-[0.2px] uppercase leading-[12px] ${canContinue ? 'text-white' : 'text-[#b0bac6]'}`}>
-              Continue
+            <p className={`font-['Figtree:Bold',sans-serif] font-bold text-[12px] tracking-[0.2px] uppercase leading-[12px] ${(editMode || canContinue) ? 'text-white' : 'text-[#b0bac6]'}`}>
+              {editMode ? 'Save Changes' : 'Continue'}
             </p>
           </button>
         </div>

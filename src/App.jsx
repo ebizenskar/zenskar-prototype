@@ -387,16 +387,14 @@ export default function App() {
       <div className="flex flex-col flex-1 min-w-0 pt-[11px]">
 
         {/* Breadcrumb */}
-        <div className="flex gap-[8px] items-center h-[30px] px-0 shrink-0">
-          <div className="flex items-center">
-            <div className="flex flex-col font-['Figtree:Medium',sans-serif] font-medium justify-end leading-[0] text-[#94a3b8] text-[13px] whitespace-nowrap">
-              <p className="leading-[16px] whitespace-pre">{`Home  / `}</p>
-            </div>
-          </div>
-          <div className="bg-[#334155] flex items-center justify-center p-[4px] relative rounded-[4px] shrink-0">
-            <div className="flex flex-col font-['Figtree:SemiBold',sans-serif] font-semibold justify-end leading-[0] text-[13px] text-white whitespace-nowrap">
-              <p className="leading-[13px]">Contract</p>
-            </div>
+        <div className="flex items-center gap-[8px] mb-[9px] shrink-0 h-[22px]">
+          <span className="font-['Figtree:Medium',sans-serif] font-medium text-[#94a3b8] text-[13px] leading-none whitespace-nowrap">
+            {'Home  /'}
+          </span>
+          <div className="bg-[#334155] flex items-center justify-center px-[4px] h-[22px] rounded-[4px] shrink-0">
+            <span className="font-['Figtree:SemiBold',sans-serif] font-semibold text-[13px] text-white leading-none whitespace-nowrap">
+              Contract
+            </span>
           </div>
         </div>
 
@@ -421,25 +419,19 @@ export default function App() {
                 </div>
               </div>
               {/* Generate Invoices */}
-              <div className="bg-white border border-[#cbd5e1] border-solid flex gap-[8px] h-[32px] items-center justify-end pl-[12px] pr-[8px] rounded-[4px] shrink-0">
-                <div className="flex items-center">
-                  <div className="flex flex-col font-['Figtree:Bold',sans-serif] font-bold justify-end leading-[0] text-[#334155] text-[13px] text-right tracking-[0.2px] uppercase whitespace-nowrap">
-                    <p className="leading-[14px]">GENERATE INVOICES</p>
-                  </div>
-                </div>
+              <div className="bg-white border border-[#cbd5e1] border-solid flex gap-[8px] h-[32px] items-center pl-[12px] pr-[8px] rounded-[4px] shrink-0">
+                <span className="font-['Figtree:Bold',sans-serif] font-bold text-[#334155] text-[13px] tracking-[0.2px] uppercase whitespace-nowrap leading-none">GENERATE INVOICES</span>
                 <div className="bg-[#cbd5e1] h-[12px] rounded-[2px] shrink-0 w-px" />
-                <div className="text-[#334155]">
+                <div className="text-[#334155] flex items-center">
                   <DownloadIcon />
                 </div>
               </div>
               {/* Export */}
-              <div className="bg-white border border-[#cbd5e1] border-solid flex gap-[8px] h-[32px] items-center justify-end px-[12px] rounded-[4px] shrink-0">
-                <div className="text-[#334155]">
+              <div className="bg-white border border-[#cbd5e1] border-solid flex gap-[8px] h-[32px] items-center px-[12px] rounded-[4px] shrink-0">
+                <div className="text-[#334155] flex items-center">
                   <DownloadIcon />
                 </div>
-                <div className="flex flex-col font-['Figtree:Bold',sans-serif] font-bold justify-end leading-[0] text-[#334155] text-[13px] text-right tracking-[0.2px] uppercase whitespace-nowrap">
-                  <p className="leading-[14px]">Export</p>
-                </div>
+                <span className="font-['Figtree:Bold',sans-serif] font-bold text-[#334155] text-[13px] tracking-[0.2px] uppercase whitespace-nowrap leading-none">Export</span>
               </div>
               {/* Add New Contract */}
               <div
